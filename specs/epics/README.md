@@ -7,6 +7,6 @@ folder is the adoption; the merge creates the epic in the workspace.
 
 | Epic | Cluster | Status | What it is |
 |------|---------|--------|------------|
-| [`astrowind/`](./astrowind/) | **AW** | In progress (AW0) | Vercel's AstroWind template, built static and served as Cloudflare Workers Static Assets behind one Worker — and an Orun baseline that instantiates it (AW2) |
+| [`astrowind/`](./astrowind/) | **AW** | In progress (AW1: the site on Workers) | Vercel's AstroWind template, built static and served as Cloudflare Workers Static Assets behind one Worker — and an Orun baseline that instantiates it (AW2) |
 
 As-built ≠ intent: what shipped lives in each epic's `IMPLEMENTATION-STATUS.md`.

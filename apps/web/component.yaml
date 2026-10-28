@@ -1,0 +1,89 @@
+apiVersion: sourceplane.io/v1
+kind: Component
+metadata:
+  name: web
+  description: The AstroWind site (a static Astro + Tailwind CSS build on Cloudflare Workers + Static Assets, per environment)
+spec:
+  type: cloudflare-workers-assets-turbo
+  lifecycle: production
+  owner: platform
+  # Its pages, attached to it in the workspace's catalog: what the Docs
+  # library shows for it, and what the catalog's docs and runbook checks read.
+  # Generated from what this manifest and its sources declare.
+  docs:
+    overview: docs/overview.md
+    pages:
+      - { path: docs/architecture.md, role: architecture, title: Architecture }
+      - { path: docs/runbook.md, role: runbook, title: Runbook }
+  # `app`, not `web`: a domain and a component share one name space in the
+  # catalog, and a domain called `web` hid this component from it.
+  domain: app
+  path: apps/web
+  # Its own lane per environment: the site's build is the longest job in the
+  # plan, and a shared lane would wait on it.
+  lane: isolated
+  subscribe:
+    environments:
+      - name: dev
+        profile: verify
+      - name: stage
+        profile: verify
+        profileRules:
+          - profile: deploy
+            when:
+              triggerRef: github-push-main
+      - name: prod
+        profile: verify
+        profileRules:
+          - profile: deploy
+            when:
+              triggerRef: github-push-main
+  parameters:
+    nodeVersion: "22"
+    pnpmVersion: "10.12.1"
+
+    workspaceDir: ../..
+    appDir: .
+
+    turboFilter: "@app/web"
+    # The config the dry run and the deploy hand to wrangler: the Worker
+    # (worker/index.ts) and the static build in dist/ as its assets.
+    # AstroWind builds fully static, so there is no adapter and no generated
+    # config — this committed file is the one wrangler deploys.
+    wranglerConfig: wrangler.jsonc
+
+    # `astro build` (output: 'static') writes every page, feed, sitemap and
+    # optimised image to dist/. The Worker is a source file wrangler bundles
+    # at deploy; the lane checks it exists after the build like any entry.
+    workerEntrypoint: worker/index.ts
+    assetsDir: dist
+
+    # Per-env worker name: astrowind-web-{dev,stage,prod}.
+    workerName: astrowind-web
+    environmentAwareWorkerName: true
+
+    # The account's workers.dev subdomain; exported to the smoke step as
+    # ${WORKERS_DEV_SUBDOMAIN} and used to build ${DEPLOYED_URL}.
+    workersDevSubdomain: your-workers-subdomain
+
+    installCommand: pnpm install --frozen-lockfile
+    # The site's public origin (canonical links, the sitemap and the RSS feed
+    # are absolute): the environment's SITE_URL when intent.yaml sets one (a
+    # custom domain), else its workers.dev URL. The subdomain is written out
+    # rather than read from ${WORKERS_DEV_SUBDOMAIN}, which the composition
+    # exports to the smoke step only. ${ORUN_ENVIRONMENT} the runner sets for
+    # every step. The theme's config builder reads PUBLIC_SITE_URL over
+    # src/config.yaml's `site:`.
+    buildCommand: PUBLIC_SITE_URL="${SITE_URL:-https://astrowind-web-${ORUN_ENVIRONMENT}.your-workers-subdomain.workers.dev}" pnpm exec turbo run build --filter=@app/web
+
+    # Smoke: the home page carries the template's hero ("Free template for"),
+    # the blog index lists posts, and an unknown path answers the site's own
+    # 404 page with a 404 status (served by the assets through the Worker).
+    # Each response is buffered before grep so an early match cannot SIGPIPE
+    # curl.
+    smokeCommand: "html=$(curl -sfL \"${DEPLOYED_URL}/\") && echo \"${html}\" | grep -q 'Free template for' && blog=$(curl -sfL \"${DEPLOYED_URL}/blog\") && echo \"${blog}\" | grep -q '/get-started-website-with-astro-tailwind-css' && test \"$(curl -s -o /dev/null -w '%{http_code}' \"${DEPLOYED_URL}/no-such-page\")\" = 404"
+  labels:
+    team: platform
+    layer: delivery
+    surface: web
+    runtime: cloudflare

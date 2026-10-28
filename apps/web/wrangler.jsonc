@@ -1,0 +1,20 @@
+// The Worker and the static assets `astro build` emits. AstroWind is fully
+// static, so the Worker (worker/index.ts) only hands unmatched requests back
+// to the assets, which answer with dist/404.html. `drop-trailing-slash`
+// serves dist/about/index.html at /about — the template's `trailingSlash:
+// false` (vercel.json `cleanUrls`, `trailingSlash: false`). Cache headers for
+// /_astro/* are public/_headers, which the assets upload honours.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "astrowind-web",
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "observability": { "enabled": true }
+}
