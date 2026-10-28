@@ -4,7 +4,7 @@
 |---|---|---|
 | AW0 — the spec | ✅ | the repository's first commit |
 | AW1 — the site on Workers | ✅ | AW-2 |
-| AW2 — a baseline | planned | AW-3 |
+| AW2 — a baseline | ✅ | AW-3, tagged `baseline-v1` |
 
 ## Departures from the upstream template
 

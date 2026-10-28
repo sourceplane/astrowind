@@ -7,7 +7,7 @@ somebody else's site in one landing.**
 
 | | |
 |---|---|
-| Status | In progress — AW1 on main: the site runs on Workers |
+| Status | ✅ Shipped (`baseline-v1`) — proven offline in Baseline CI; not yet live (risk AW-A) |
 | Upstream | [arthelokyo/astrowind](https://github.com/arthelokyo/astrowind) (MIT), at `14e1a69` (2026-09-12) |
 | Reference | [astro-boilerplate](https://github.com/sourceplane/astro-boilerplate) — the same scaffolding, tests and bootstrap |
 | Key | `AW` |
