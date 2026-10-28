@@ -1,0 +1,15 @@
+apiVersion: orun.io/v1
+kind: TaskContract
+metadata:
+  name: AW-1
+  title: "The spec"
+spec:
+  goal: The astrowind repository is born with its intent, CI, tooling and spec index, and the astrowind epic — declaration, doc set and task contracts — is on main
+  affects:
+    - specs/epics/astrowind
+    - specs/epics/README.md
+    - tasks
+  doneWhen:
+    - epic.yaml, README, design, implementation plan, risks and status are on main
+    - the three task contracts exist
+  gates: []

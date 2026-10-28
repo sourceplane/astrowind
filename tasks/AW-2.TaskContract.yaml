@@ -1,0 +1,17 @@
+apiVersion: orun.io/v1
+kind: TaskContract
+metadata:
+  name: AW-2
+  title: "The site on Workers"
+spec:
+  goal: AstroWind runs on Cloudflare Workers + Static Assets — built static, served as assets behind one Worker — with its README saying how it maps to Vercel
+  affects:
+    - apps/web
+    - pnpm-lock.yaml
+    - pnpm-workspace.yaml
+    - README.md
+    - .gitignore
+  doneWhen:
+    - pnpm typecheck, lint, test and build are green
+    - wrangler dev serves every route the template has, its 404 and its asset cache header
+  gates: []
