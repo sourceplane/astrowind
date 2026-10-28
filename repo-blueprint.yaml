@@ -120,6 +120,9 @@ ignore:
   - plan.json
   - "**/*.tsbuildinfo"
   - "**/next-env.d.ts"
+  # What `astro check` and `astro build` generate (types, icons, fonts): a
+  # site's own build makes it again.
+  - .astro
   # `orun new` snapshots the WORKING TREE, not the git index: an operator's
   # local environment files would otherwise be copied into somebody else's
   # repository. `.env.example` is not among them, and ships.

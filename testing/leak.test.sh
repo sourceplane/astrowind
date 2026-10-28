@@ -70,7 +70,7 @@ for p in placed:
 
 # ── nothing local and nothing built ───────────────────────────────────────
 LOCAL = re.compile(r"(^|/)(\.env(\.[^/]*\.local|\.local)?|\.dev\.vars(\..*)?|node_modules|dist|\.next|"
-                   r"\.open-next|\.wrangler|\.turbo|\.orun|next-env\.d\.ts|[^/]*\.tsbuildinfo)(/|$)")
+                   r"\.open-next|\.wrangler|\.turbo|\.orun|\.astro|next-env\.d\.ts|[^/]*\.tsbuildinfo)(/|$)")
 for p in placed:
     if LOCAL.search(p):
         bad(f"{p} would ship — a local or built file of whoever ran the bootstrap")

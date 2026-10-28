@@ -8,7 +8,7 @@ reads in order.
 |---|---|---|---|
 | 1 | The site builds fully static (`output: 'static'`, no adapter) and deploys as Workers Static Assets | AstroWind is a static template, and its own README deploys it to Workers as assets with no adapter; an adapter would move prerendering into workerd for nothing | `specs/epics/astrowind/design.md` |
 | 2 | One small Worker (`apps/web/worker/index.ts`) in front of the assets | The `cloudflare-workers-assets-turbo` composition deploys a Worker with its assets; this one hands unmatched requests back to the assets (the 404 page) and is where a redirect or an API route goes later | risk AW-B |
-| 3 | Astro 7 and the template's own dependency set, sharp at build time | Upstream's versions; images are optimised by `astro build` in Node, so the Worker needs no image service | IMPLEMENTATION-STATUS (departures) |
+| 3 | Astro held at 7.3.8, the template's own dependency set otherwise, sharp at build time | Astro 7.4 refuses any Node below 22.23.4, and the Node 22 some GitHub runners carry is 22.23.3; images are optimised by `astro build` in Node, so the Worker needs no image service | IMPLEMENTATION-STATUS (departures) |
 | 4 | The tests live in the app (`apps/web/src/test`), not a `tests/web` package | Astro components render only under Astro's own Vite config (the container API) | risk AW-D |
 | 5 | One committed `wrangler.jsonc` is what deploys | There is no adapter to generate a second config; the lane checks the config exists before the build | `apps/web/component.yaml` |
 | 6 | The site's name is one seam, `SITE_NAME` in `apps/web/src/site.ts`, read by the theme's config builder | The rename rewrites one literal; `src/config.yaml` no longer spells the name | IMPLEMENTATION-STATUS (departures) |

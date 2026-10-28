@@ -22,3 +22,5 @@ Everything not listed here is the template as it is upstream at `14e1a69`.
 | 8 | npm `overrides` → pnpm `overrides` in `pnpm-workspace.yaml` | The same floors, in pnpm's form |
 | 9 | `lint` is `eslint .` (the template's config, `.wrangler` ignored), `typecheck` is `astro check`; Prettier stays, as `pnpm --filter @app/web format` | The workspace's `typecheck` / `lint` / `test` contract |
 | 10 | Tests: `src/test/site.test.ts`, `src/test/worker.test.ts` (vitest over Astro's container API) | The template ships none |
+| 11 | `astro` is held at `7.3.8` (upstream `^7.3.1`, which resolves 7.4) | Astro 7.4 refuses Node below 22.23.4; the lanes and Baseline CI run `node-version: 22`, which some GitHub runners resolve to 22.23.3 |
+| 12 | `.astro/` is ignored by the blueprint and the leak gate | What `astro check` generates (types, icons, fonts) is a build's, not the site's |
